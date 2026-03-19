@@ -1,5 +1,18 @@
 export function toNumber(value) {
-  return Number(value || 0);
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  const cleaned = String(value || "")
+    .replace(/\./g, "")
+    .replace(/,/g, "")
+    .replace(/[^\d-]/g, "");
+
+  if (!cleaned || cleaned === "-") {
+    return 0;
+  }
+
+  return Number(cleaned);
 }
 
 export function formatCurrency(value) {
@@ -24,6 +37,84 @@ export function showAlert(element, message, type = "info") {
 
 export function hideAlert(element) {
   element.classList.add("hidden");
+}
+
+export function formatNumberWithDots(value) {
+  const numberValue = toNumber(value);
+  return new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: 0,
+  }).format(numberValue);
+}
+
+export function bindCurrencyInputs(rootElement) {
+  const inputs = rootElement.querySelectorAll('input[data-currency="true"]');
+
+  inputs.forEach((input) => {
+    const formatInput = () => {
+      const numeric = toNumber(input.value);
+      input.value = numeric > 0 ? formatNumberWithDots(numeric) : input.value.replace(/[^\d]/g, "");
+    };
+
+    input.addEventListener("input", formatInput);
+    input.addEventListener("blur", formatInput);
+  });
+}
+
+export function setGlobalLoading(loaderElement, isLoading, message = "Memproses...") {
+  if (!loaderElement) {
+    return;
+  }
+
+  const textEl = loaderElement.querySelector("div");
+  if (textEl) {
+    textEl.textContent = message;
+  }
+
+  loaderElement.classList.toggle("hidden", !isLoading);
+  loaderElement.classList.toggle("flex", isLoading);
+}
+
+export async function swalConfirm(options) {
+  if (typeof Swal === "undefined") {
+    return window.confirm(options?.text || "Lanjutkan?");
+  }
+
+  const result = await Swal.fire({
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Batal",
+    ...options,
+  });
+
+  return result.isConfirmed;
+}
+
+export async function swalSuccess(title, text = "") {
+  if (typeof Swal === "undefined") {
+    return;
+  }
+
+  await Swal.fire({
+    icon: "success",
+    title,
+    text,
+    timer: 1400,
+    showConfirmButton: false,
+  });
+}
+
+export async function swalError(title, text) {
+  if (typeof Swal === "undefined") {
+    alert(`${title}: ${text}`);
+    return;
+  }
+
+  await Swal.fire({
+    icon: "error",
+    title,
+    text,
+  });
 }
 
 export function formDataToPayload(formElement) {

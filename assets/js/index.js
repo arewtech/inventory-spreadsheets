@@ -1,5 +1,13 @@
-import { apiDelete, apiGetDetail, apiGetMaster, apiUpdate } from "./api.js";
-import { formatCurrency, formDataToPayload, hideAlert, showAlert } from "./utils.js";
+import { apiDelete, apiGetDetail, apiGetMaster } from "./api.js";
+import {
+  formatCurrency,
+  hideAlert,
+  setGlobalLoading,
+  showAlert,
+  swalConfirm,
+  swalError,
+  swalSuccess,
+} from "./utils.js";
 
 const tableBody = document.getElementById("tableBody");
 const loadingState = document.getElementById("loadingState");
@@ -10,8 +18,18 @@ const btnReload = document.getElementById("btnReload");
 const itemModal = document.getElementById("itemModal");
 const btnCloseModal = document.getElementById("btnCloseModal");
 const btnCancel = document.getElementById("btnCancel");
-const editForm = document.getElementById("editForm");
 const btnDelete = document.getElementById("btnDelete");
+const btnEditPage = document.getElementById("btnEditPage");
+const globalLoader = document.getElementById("globalLoader");
+
+const detailKodeBarang = document.getElementById("detail_kode_barang");
+const detailNama = document.getElementById("detail_nama");
+const detailKategori = document.getElementById("detail_kategori");
+const detailSatuan = document.getElementById("detail_satuan");
+const detailHargaBeli = document.getElementById("detail_harga_beli");
+const detailHargaJual = document.getElementById("detail_harga_jual");
+const detailStok = document.getElementById("detail_stok");
+const detailStokMin = document.getElementById("detail_stok_min");
 
 let activeKodeBarang = "";
 
@@ -34,22 +52,29 @@ function closeModal() {
 }
 
 function fillForm(data) {
-  editForm.kode_barang.value = data.kode_barang || "";
-  editForm.nama.value = data.nama || "";
-  editForm.kategori.value = data.kategori || "";
-  editForm.satuan.value = data.satuan || "";
-  editForm.harga_beli.value = data.harga_beli ?? 0;
-  editForm.harga_jual.value = data.harga_jual ?? 0;
-  editForm.stok.value = data.stok ?? 0;
-  editForm.stok_min.value = data.stok_min ?? 0;
+  detailKodeBarang.value = data.kode_barang || "-";
+  detailNama.value = data.nama || "-";
+  detailKategori.value = data.kategori || "-";
+  detailSatuan.value = data.satuan || "-";
+  detailHargaBeli.value = formatCurrency(data.harga_beli ?? 0);
+  detailHargaJual.value = formatCurrency(data.harga_jual ?? 0);
+  detailStok.value = data.stok ?? 0;
+  detailStokMin.value = data.stok_min ?? 0;
+
+  if (data.kode_barang) {
+    btnEditPage.href = `edit.html?kode_barang=${encodeURIComponent(data.kode_barang)}`;
+  } else {
+    btnEditPage.href = "edit.html";
+  }
 }
 
 function renderRows(items) {
   tableBody.innerHTML = "";
 
-  items.forEach((item) => {
+  items.forEach((item, index) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td class="px-3 py-2 text-center">${index + 1}</td>
       <td class="px-3 py-2 font-medium">${item.kode_barang || "-"}</td>
       <td class="px-3 py-2">${item.nama || "-"}</td>
       <td class="px-3 py-2">${item.kategori || "-"}</td>
@@ -64,7 +89,7 @@ function renderRows(items) {
           data-kode="${item.kode_barang}"
           class="btn-detail rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-600"
         >
-          Detail/Edit
+          Detail
         </button>
       </td>
     `;
@@ -76,6 +101,7 @@ async function loadData() {
   hideAlert(alertBox);
   setLoading(true);
   setEmpty(false);
+  setGlobalLoading(globalLoader, true, "Memuat data...");
 
   try {
     const items = await apiGetMaster();
@@ -87,11 +113,13 @@ async function loadData() {
     showAlert(alertBox, error.message, "error");
   } finally {
     setLoading(false);
+    setGlobalLoading(globalLoader, false);
   }
 }
 
 async function handleOpenDetail(kodeBarang) {
   hideAlert(alertBox);
+  setGlobalLoading(globalLoader, true, "Memuat detail...");
 
   try {
     const detail = await apiGetDetail(kodeBarang);
@@ -99,22 +127,10 @@ async function handleOpenDetail(kodeBarang) {
     fillForm(detail);
     openModal();
   } catch (error) {
+    await swalError("Gagal ambil detail", error.message);
     showAlert(alertBox, error.message, "error");
-  }
-}
-
-async function handleUpdate(event) {
-  event.preventDefault();
-  hideAlert(alertBox);
-
-  try {
-    const payload = formDataToPayload(editForm);
-    await apiUpdate(payload);
-    showAlert(alertBox, "Data berhasil diupdate", "success");
-    closeModal();
-    await loadData();
-  } catch (error) {
-    showAlert(alertBox, error.message, "error");
+  } finally {
+    setGlobalLoading(globalLoader, false);
   }
 }
 
@@ -124,7 +140,12 @@ async function handleDelete() {
     return;
   }
 
-  const confirmed = window.confirm(`Hapus data ${activeKodeBarang}?`);
+  const confirmed = await swalConfirm({
+    title: "Hapus data?",
+    text: `Data ${activeKodeBarang} akan dihapus permanen.`,
+    confirmButtonText: "Hapus",
+  });
+
   if (!confirmed) {
     return;
   }
@@ -132,12 +153,17 @@ async function handleDelete() {
   hideAlert(alertBox);
 
   try {
+    setGlobalLoading(globalLoader, true, "Menghapus data...");
     await apiDelete(activeKodeBarang);
+    await swalSuccess("Berhasil", "Data berhasil dihapus");
     showAlert(alertBox, "Data berhasil dihapus", "success");
     closeModal();
     await loadData();
   } catch (error) {
+    await swalError("Gagal hapus data", error.message);
     showAlert(alertBox, error.message, "error");
+  } finally {
+    setGlobalLoading(globalLoader, false);
   }
 }
 
@@ -151,7 +177,6 @@ itemModal.addEventListener("click", (event) => {
   }
 });
 
-editForm.addEventListener("submit", handleUpdate);
 btnDelete.addEventListener("click", handleDelete);
 
 tableBody.addEventListener("click", (event) => {

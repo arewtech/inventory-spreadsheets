@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Master Data Inventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body class="bg-slate-50 text-slate-800">
     <div class="min-h-screen">
@@ -41,6 +42,7 @@
             <table class="min-w-full text-left text-sm">
               <thead class="bg-slate-100 text-slate-600">
                 <tr>
+                  <th class="px-3 py-2 text-center">No</th>
                   <th class="px-3 py-2">Kode</th>
                   <th class="px-3 py-2">Nama</th>
                   <th class="px-3 py-2">Kategori</th>
@@ -70,48 +72,48 @@
     <div id="itemModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
       <div class="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl">
         <div class="mb-4 flex items-center justify-between">
-          <h3 class="text-lg font-semibold">Detail / Edit Barang</h3>
+          <h3 class="text-lg font-semibold">Detail Barang</h3>
           <button id="btnCloseModal" class="rounded p-1 text-slate-500 hover:bg-slate-100" type="button">✕</button>
         </div>
 
-        <form id="editForm" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div id="detailForm" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label class="mb-1 block text-sm font-medium">Kode Barang</label>
-            <input id="kode_barang" name="kode_barang" required readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+            <input id="detail_kode_barang" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Nama</label>
-            <input id="nama" name="nama" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_nama" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Kategori</label>
-            <input id="kategori" name="kategori" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_kategori" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Satuan</label>
-            <input id="satuan" name="satuan" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_satuan" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Harga Beli</label>
-            <input id="harga_beli" name="harga_beli" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_harga_beli" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Harga Jual</label>
-            <input id="harga_jual" name="harga_jual" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_harga_jual" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Stok</label>
-            <input id="stok" name="stok" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_stok" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium">Stok Minimal</label>
-            <input id="stok_min" name="stok_min" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            <input id="detail_stok_min" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
           </div>
 
           <div class="col-span-1 mt-2 flex flex-wrap gap-2 sm:col-span-2">
-            <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-              Simpan Perubahan
-            </button>
+            <a id="btnEditPage" href="#" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+              Edit
+            </a>
             <button id="btnDelete" type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
               Hapus
             </button>
@@ -119,8 +121,12 @@
               Tutup
             </button>
           </div>
-        </form>
+        </div>
       </div>
+    </div>
+
+    <div id="globalLoader" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-900/40 p-4">
+      <div class="rounded-xl bg-white px-5 py-4 text-sm font-medium text-slate-700 shadow-lg">Memproses...</div>
     </div>
 
     <script type="module" src="assets/js/index.js"></script>
