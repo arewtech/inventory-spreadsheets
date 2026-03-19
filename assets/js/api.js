@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/stfu";
+const API_URL = "https://script.google.com/macros/s/AKfycbxRSD_Yd72z1Ikkdi80BlwBDeFeiXwIocCFq2L_XHyBQ1qEOJAeXeaLPp40z4ivChip/exec";
 
 function buildUrl(action, query = {}) {
   const params = new URLSearchParams({ action, ...query });
@@ -17,6 +17,19 @@ async function parseResponse(response) {
   } catch {
     return { message: text };
   }
+}
+
+async function postSimple(action, payload) {
+  const response = await fetch(buildUrl(action), {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return await parseResponse(response);
 }
 
 export async function apiGetMaster() {
@@ -56,19 +69,7 @@ export async function apiGetDetail(kodeBarang) {
 
 export async function apiAdd(payload) {
   try {
-    const response = await fetch(buildUrl("add"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return await parseResponse(response);
+    return await postSimple("add", payload);
   } catch (error) {
     throw new Error(`Gagal menambah data: ${error.message}`);
   }
@@ -76,19 +77,7 @@ export async function apiAdd(payload) {
 
 export async function apiUpdate(payload) {
   try {
-    const response = await fetch(buildUrl("update"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return await parseResponse(response);
+    return await postSimple("update", payload);
   } catch (error) {
     throw new Error(`Gagal update data: ${error.message}`);
   }
@@ -96,19 +85,7 @@ export async function apiUpdate(payload) {
 
 export async function apiDelete(kodeBarang) {
   try {
-    const response = await fetch(buildUrl("delete"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ kode_barang: kodeBarang }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return await parseResponse(response);
+    return await postSimple("delete", { kode_barang: kodeBarang });
   } catch (error) {
     throw new Error(`Gagal hapus data: ${error.message}`);
   }
