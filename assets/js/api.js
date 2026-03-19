@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxRSD_Yd72z1Ikkdi80BlwBDeFeiXwIocCFq2L_XHyBQ1qEOJAeXeaLPp40z4ivChip/exec";
+const API_URL = "https://script.google.com/macros/s/stfu";
 
 function buildUrl(action, query = {}) {
   const params = new URLSearchParams({ action, ...query });
