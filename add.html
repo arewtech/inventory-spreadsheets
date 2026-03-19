@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Barang - Master Data Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div class="min-h-screen">
+      <header class="border-b bg-white">
+        <div class="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
+          <div>
+            <h1 class="text-xl font-semibold">Tambah Barang</h1>
+            <p class="text-sm text-slate-500">Input data master inventory</p>
+          </div>
+          <a href="index.html" class="rounded-lg border px-3 py-2 text-sm hover:bg-slate-100">Kembali</a>
+        </div>
+      </header>
+
+      <main class="mx-auto max-w-2xl px-4 py-6">
+        <div id="alertBox" class="mb-4 hidden rounded-lg px-4 py-3 text-sm"></div>
+
+        <div class="rounded-xl border bg-white p-5 shadow-sm">
+          <form id="addForm" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1 block text-sm font-medium">Kode Barang</label>
+              <input name="kode_barang" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Nama</label>
+              <input name="nama" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Kategori</label>
+              <input name="kategori" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Satuan</label>
+              <input name="satuan" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Harga Beli</label>
+              <input name="harga_beli" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Harga Jual</label>
+              <input name="harga_jual" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Stok</label>
+              <input name="stok" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium">Stok Minimal</label>
+              <input name="stok_min" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+            </div>
+
+            <div class="col-span-1 mt-2 flex gap-2 sm:col-span-2">
+              <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                Simpan
+              </button>
+              <button type="reset" class="rounded-lg border px-4 py-2 text-sm hover:bg-slate-100">
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="assets/js/add.js"></script>
+  </body>
+</html>

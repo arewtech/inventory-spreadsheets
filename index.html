@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Master Data Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div class="min-h-screen">
+      <header class="border-b bg-white">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <div>
+            <h1 class="text-xl font-semibold">Master Data Inventory</h1>
+            <p class="text-sm text-slate-500">List data barang</p>
+          </div>
+          <a
+            href="add.html"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >+ Tambah Barang</a
+          >
+        </div>
+      </header>
+
+      <main class="mx-auto max-w-6xl px-4 py-6">
+        <div id="alertBox" class="mb-4 hidden rounded-lg px-4 py-3 text-sm"></div>
+
+        <div class="rounded-xl border bg-white p-4 shadow-sm">
+          <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-base font-semibold">Daftar Barang</h2>
+            <button
+              id="btnReload"
+              class="rounded-lg border px-3 py-2 text-sm hover:bg-slate-100"
+              type="button"
+            >
+              Reload
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+              <thead class="bg-slate-100 text-slate-600">
+                <tr>
+                  <th class="px-3 py-2">Kode</th>
+                  <th class="px-3 py-2">Nama</th>
+                  <th class="px-3 py-2">Kategori</th>
+                  <th class="px-3 py-2">Satuan</th>
+                  <th class="px-3 py-2 text-right">Harga Beli</th>
+                  <th class="px-3 py-2 text-right">Harga Jual</th>
+                  <th class="px-3 py-2 text-right">Stok</th>
+                  <th class="px-3 py-2 text-right">Stok Min</th>
+                  <th class="px-3 py-2 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody" class="divide-y"></tbody>
+            </table>
+          </div>
+
+          <div id="emptyState" class="hidden py-8 text-center text-sm text-slate-500">
+            Data belum tersedia.
+          </div>
+
+          <div id="loadingState" class="hidden py-8 text-center text-sm text-slate-500">
+            Memuat data...
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="itemModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
+      <div class="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl">
+        <div class="mb-4 flex items-center justify-between">
+          <h3 class="text-lg font-semibold">Detail / Edit Barang</h3>
+          <button id="btnCloseModal" class="rounded p-1 text-slate-500 hover:bg-slate-100" type="button">✕</button>
+        </div>
+
+        <form id="editForm" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium">Kode Barang</label>
+            <input id="kode_barang" name="kode_barang" required readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Nama</label>
+            <input id="nama" name="nama" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Kategori</label>
+            <input id="kategori" name="kategori" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Satuan</label>
+            <input id="satuan" name="satuan" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Harga Beli</label>
+            <input id="harga_beli" name="harga_beli" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Harga Jual</label>
+            <input id="harga_jual" name="harga_jual" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Stok</label>
+            <input id="stok" name="stok" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Stok Minimal</label>
+            <input id="stok_min" name="stok_min" type="number" min="0" required class="w-full rounded-lg border px-3 py-2 text-sm" />
+          </div>
+
+          <div class="col-span-1 mt-2 flex flex-wrap gap-2 sm:col-span-2">
+            <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+              Simpan Perubahan
+            </button>
+            <button id="btnDelete" type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+              Hapus
+            </button>
+            <button id="btnCancel" type="button" class="rounded-lg border px-4 py-2 text-sm hover:bg-slate-100">
+              Tutup
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="assets/js/index.js"></script>
+  </body>
+</html>
