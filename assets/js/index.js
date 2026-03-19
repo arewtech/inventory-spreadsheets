@@ -52,14 +52,14 @@ function closeModal() {
 }
 
 function fillForm(data) {
-  detailKodeBarang.value = data.kode_barang || "-";
-  detailNama.value = data.nama || "-";
-  detailKategori.value = data.kategori || "-";
-  detailSatuan.value = data.satuan || "-";
-  detailHargaBeli.value = formatCurrency(data.harga_beli ?? 0);
-  detailHargaJual.value = formatCurrency(data.harga_jual ?? 0);
-  detailStok.value = data.stok ?? 0;
-  detailStokMin.value = data.stok_min ?? 0;
+  detailKodeBarang.textContent = data.kode_barang || "-";
+  detailNama.textContent = data.nama || "-";
+  detailKategori.textContent = data.kategori || "-";
+  detailSatuan.textContent = data.satuan || "-";
+  detailHargaBeli.textContent = formatCurrency(data.harga_beli ?? 0);
+  detailHargaJual.textContent = formatCurrency(data.harga_jual ?? 0);
+  detailStok.textContent = String(data.stok ?? 0);
+  detailStokMin.textContent = String(data.stok_min ?? 0);
 
   if (data.kode_barang) {
     btnEditPage.href = `edit.html?kode_barang=${encodeURIComponent(data.kode_barang)}`;
@@ -73,6 +73,8 @@ function renderRows(items) {
 
   items.forEach((item, index) => {
     const tr = document.createElement("tr");
+    tr.className = "cursor-pointer hover:bg-slate-50";
+    tr.dataset.kode = item.kode_barang || "";
     tr.innerHTML = `
       <td class="px-3 py-2 text-center">${index + 1}</td>
       <td class="px-3 py-2 font-medium">${item.kode_barang || "-"}</td>
@@ -180,12 +182,12 @@ itemModal.addEventListener("click", (event) => {
 btnDelete.addEventListener("click", handleDelete);
 
 tableBody.addEventListener("click", (event) => {
-  const target = event.target.closest(".btn-detail");
-  if (!target) {
+  const row = event.target.closest("tr[data-kode]");
+  if (!row) {
     return;
   }
 
-  const kodeBarang = target.dataset.kode;
+  const kodeBarang = row.dataset.kode;
   if (kodeBarang) {
     handleOpenDetail(kodeBarang);
   }

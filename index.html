@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Master Data Inventory</title>
+    <title>Inventory</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
@@ -12,7 +12,7 @@
       <header class="border-b bg-white">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div>
-            <h1 class="text-xl font-semibold">Master Data Inventory</h1>
+            <h1 class="text-xl font-semibold">Data Inventory</h1>
             <p class="text-sm text-slate-500">List data barang</p>
           </div>
           <a
@@ -70,44 +70,44 @@
     </div>
 
     <div id="itemModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
-      <div class="w-full max-w-2xl rounded-xl bg-white p-5 shadow-xl">
+      <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white p-5 shadow-xl">
         <div class="mb-4 flex items-center justify-between">
           <h3 class="text-lg font-semibold">Detail Barang</h3>
           <button id="btnCloseModal" class="rounded p-1 text-slate-500 hover:bg-slate-100" type="button">✕</button>
         </div>
 
-        <div id="detailForm" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label class="mb-1 block text-sm font-medium">Kode Barang</label>
-            <input id="detail_kode_barang" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+        <div id="detailForm" class="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Kode Barang</p>
+            <p id="detail_kode_barang" class="mt-1 text-sm font-medium text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Nama</label>
-            <input id="detail_nama" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Nama</p>
+            <p id="detail_nama" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Kategori</label>
-            <input id="detail_kategori" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Kategori</p>
+            <p id="detail_kategori" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Satuan</label>
-            <input id="detail_satuan" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Satuan</p>
+            <p id="detail_satuan" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Harga Beli</label>
-            <input id="detail_harga_beli" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Harga Beli</p>
+            <p id="detail_harga_beli" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Harga Jual</label>
-            <input id="detail_harga_jual" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Harga Jual</p>
+            <p id="detail_harga_jual" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Stok</label>
-            <input id="detail_stok" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Stok</p>
+            <p id="detail_stok" class="mt-1 text-sm text-slate-800">-</p>
           </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium">Stok Minimal</label>
-            <input id="detail_stok_min" readonly class="w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm" />
+          <div class="border-b border-slate-200 pb-2">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Stok Minimal</p>
+            <p id="detail_stok_min" class="mt-1 text-sm text-slate-800">-</p>
           </div>
 
           <div class="col-span-1 mt-2 flex flex-wrap gap-2 sm:col-span-2">
